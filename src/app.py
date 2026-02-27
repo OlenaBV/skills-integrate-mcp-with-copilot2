@@ -8,6 +8,8 @@ for extracurricular activities at Mergington High School.
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
+from fastapi import Request
+from typing import Dict
 import os
 from pathlib import Path
 
@@ -18,6 +20,17 @@ app = FastAPI(title="Mergington High School API",
 current_dir = Path(__file__).parent
 app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
           "static")), name="static")
+
+# MCP demonstration endpoint for exercise
+@app.post("/mcp-demo")
+async def mcp_demo(request: Request) -> Dict:
+    """
+    Demonstration endpoint for MCP integration exercise.
+    Accepts a JSON payload and returns a Copilot-style suggestion.
+    """
+    data = await request.json()
+    suggestion = f"Copilot suggests: Try '{data.get('prompt', 'write your code here')}'"
+    return {"suggestion": suggestion}
 
 # In-memory activity database
 activities = {
